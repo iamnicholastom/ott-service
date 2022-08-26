@@ -28,6 +28,7 @@ const Sidebar = () => {
   const classes = useStyles();
   const { data, isFetching } = useGetGenresQuery();
   const dispatch = useDispatch();
+  const { genreIdOrCategoryName } = useSelector((state) => state.currentGenreOrCategory);
 
   return (
     <>
