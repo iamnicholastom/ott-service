@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const tmdbApiKey = process.env.REACT_APP_TMDB_KEY;
@@ -29,7 +30,10 @@ export const tmdbApi = createApi({
     getMovie: builder.query({
       query: (id) => `/movie/${id}?append_to_response=videos,credits&api_key=${tmdbApiKey}`,
     }),
+    getRecommendations: builder.query({
+      query: ({ movie_id, list }) => `/movie/${movie_id}/${list}?api_key=${tmdbApiKey}`,
+    }),
   }),
 });
 
-export const { useGetMoviesQuery, useGetGenresQuery, useGetMovieQuery } = tmdbApi;
+export const { useGetMoviesQuery, useGetGenresQuery, useGetMovieQuery, useGetRecommendationsQuery } = tmdbApi;
