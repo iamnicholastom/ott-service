@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+/* eslint-disable camelcase */
+import React, { useEffect, useState } from 'react';
 import { AppBar, IconButton, Toolbar, Button, Avatar, Drawer, useMediaQuery } from '@mui/material';
 import { Menu, AccountCircle, Brightness4, Brightness7 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+import { fetchToken, moviesApi, createSessionID } from '../../utils/index';
 import { Sidebar, Search } from '../index';
 import useStyles from './styles';
 
@@ -11,7 +13,23 @@ const Navbar = () => {
   const isMobile = useMediaQuery('(max-width: 600px)');
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isAuthenticated = true;
+  const isAuthenticated = false;
+
+  const token = localStorage.getItem('request_token');
+  const sessionIdFromLocalStorage = localStorage.getItem('session_id');
+
+  useEffect(() => {
+    const loginUser = async () => {
+      if (token) {
+        if (sessionIdFromLocalStorage) {
+          const { data: userData } = await moviesApi.get(`/account?session_id=${sessionIdFromLocalStorage}`);
+        } else {
+          const sessionId = await createSessionID();
+          const { data: userData } = await moviesApi.get(`/account?session_id=${sessionId}`);
+        }
+      }
+    };
+  }, [token]);
 
   return (
     <>
@@ -28,7 +46,7 @@ const Navbar = () => {
           {!isMobile && <Search />}
           <div>
             {!isAuthenticated ? (
-              <Button color="inherit" onClick={() => {}}>
+              <Button color="inherit" onClick={fetchToken}>
                 Login &nbsp; <AccountCircle />
               </Button>
             ) : (
