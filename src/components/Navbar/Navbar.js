@@ -1,19 +1,22 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppBar, IconButton, Toolbar, Button, Avatar, Drawer, useMediaQuery } from '@mui/material';
 import { Menu, AccountCircle, Brightness4, Brightness7 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+import { userSelector, setUser } from '../../features/auth';
 import { fetchToken, moviesApi, createSessionID } from '../../utils/index';
 import { Sidebar, Search } from '../index';
 import useStyles from './styles';
 
 const Navbar = () => {
+  const { isAuthenticated, user } = useSelector(userSelector);
+  const dispatch = useDispatch();
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width: 600px)');
   const theme = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isAuthenticated = false;
 
   const token = localStorage.getItem('request_token');
   const sessionIdFromLocalStorage = localStorage.getItem('session_id');
@@ -23,12 +26,15 @@ const Navbar = () => {
       if (token) {
         if (sessionIdFromLocalStorage) {
           const { data: userData } = await moviesApi.get(`/account?session_id=${sessionIdFromLocalStorage}`);
+          dispatch(setUser(userData));
         } else {
           const sessionId = await createSessionID();
           const { data: userData } = await moviesApi.get(`/account?session_id=${sessionId}`);
+          dispatch(setUser(userData));
         }
       }
     };
+    loginUser();
   }, [token]);
 
   return (
@@ -50,7 +56,7 @@ const Navbar = () => {
                 Login &nbsp; <AccountCircle />
               </Button>
             ) : (
-              <Button color="inherit" component={Link} to="/profile/:id" className={classes.linkButton}>
+              <Button color="inherit" component={Link} to={`/profile/${user.id}`} className={classes.linkButton}>
                 {!isMobile && <>My Movies</>}
                 <Avatar style={{ width: 30, height: 30 }} alt="profile" src="https://cdn5.vectorstock.com/i/1000x1000/99/94/default-avatar-placeholder-profile-icon-male-vector-23889994.jpg" />
               </Button>
