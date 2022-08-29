@@ -8,7 +8,6 @@ import {
   Rating,
   Box,
   CircularProgress,
-  useMediaQuery,
 } from '@mui/material';
 import {
   Movie as MovieIcon,
@@ -42,7 +41,7 @@ const MovieInformation = () => {
   const [isMovieFavorited, setIsMovieFavorited] = useState(true);
   const [isMovieWatchlisted, setIsMovieWatchlisted] = useState(true);
 
-  const { data: recommendations, isFetching: isRecommendationsFetching } = useGetRecommendationsQuery({ movie_id: id, list: '/recommendations' });
+  const { data: recommendations } = useGetRecommendationsQuery({ movie_id: id, list: '/recommendations' });
 
   useEffect(() => {
     setIsMovieFavorited(!!favoriteMovies?.results?.find((movie) => movie?.id === data?.id));

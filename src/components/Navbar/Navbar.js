@@ -1,10 +1,11 @@
 /* eslint-disable camelcase */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppBar, IconButton, Toolbar, Button, Avatar, Drawer, useMediaQuery } from '@mui/material';
 import { Menu, AccountCircle, Brightness4, Brightness7 } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
+import { ColorModeContext } from '../../utils/toggleColorMode';
 import { userSelector, setUser } from '../../features/auth';
 import { fetchToken, moviesApi, createSessionID } from '../../utils/index';
 import { Sidebar, Search } from '../index';
@@ -17,6 +18,7 @@ const Navbar = () => {
   const isMobile = useMediaQuery('(max-width: 600px)');
   const theme = useTheme();
   const dispatch = useDispatch();
+  const colorMode = useContext(ColorModeContext);
 
   const token = localStorage.getItem('request_token');
   const sessionIdFromLocalStorage = localStorage.getItem('session_id');
@@ -46,7 +48,12 @@ const Navbar = () => {
               <Menu />
             </IconButton>
           )}
-          <IconButton color="inherit" sx={{ ml: 1 }} onClick={() => {}} className={classes.menuButton}>
+          <IconButton
+            color="inherit"
+            sx={{ ml: 1 }}
+            onClick={colorMode.toggleColorMode}
+            className={classes.menuButton}
+          >
             {theme.palette.mode === 'dark' ? <Brightness7 /> : <Brightness4 />}
           </IconButton>
           {!isMobile && <Search />}
