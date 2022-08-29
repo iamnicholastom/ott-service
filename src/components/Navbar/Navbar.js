@@ -12,11 +12,11 @@ import useStyles from './styles';
 
 const Navbar = () => {
   const { isAuthenticated, user } = useSelector(userSelector);
-  const dispatch = useDispatch();
+  const [mobileOpen, setMobileOpen] = useState(false);
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width: 600px)');
   const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const token = localStorage.getItem('request_token');
   const sessionIdFromLocalStorage = localStorage.getItem('session_id');
@@ -57,7 +57,7 @@ const Navbar = () => {
               </Button>
             ) : (
               <Button color="inherit" component={Link} to={`/profile/${user.id}`} className={classes.linkButton}>
-                {!isMobile && <>My Movies</>}
+                {!isMobile && <>My Movies &nbsp;</>}
                 <Avatar style={{ width: 30, height: 30 }} alt="profile" src="https://cdn5.vectorstock.com/i/1000x1000/99/94/default-avatar-placeholder-profile-icon-male-vector-23889994.jpg" />
               </Button>
             )}
